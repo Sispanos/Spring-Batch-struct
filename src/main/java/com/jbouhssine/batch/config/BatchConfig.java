@@ -1,6 +1,7 @@
 package com.jbouhssine.batch.config;
 
 import com.jbouhssine.batch.listner.JobCompletionStatsListener;
+import com.jbouhssine.batch.processor.LineItemProcessor;
 import com.jbouhssine.batch.writer.OutputClassifier;
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -16,6 +17,7 @@ import org.springframework.batch.item.file.builder.FlatFileItemWriterBuilder;
 import org.springframework.batch.item.support.ClassifierCompositeItemWriter;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -29,6 +31,9 @@ import java.io.IOException;
 @Configuration
 @EnableBatchProcessing
 public class BatchConfig {
+
+    @Autowired
+    private LineItemProcessor lineItemProcessor;
 
     private static final String OUTPUT_DIR = "src/main/resources/output/";
 
@@ -53,12 +58,7 @@ public class BatchConfig {
 
     @Bean
     public ItemProcessor<String, String> processor() {
-        return line -> {
-            if (line.contains("T01")) return line + ",STATUS=T01";
-            if (line.contains("T19")) return line + ",STATUS=T19";
-            if (line.contains("TOPO")) return line + ",STATUS=TOPO";
-            return line + ",STATUS=OK";
-        };
+        return lineItemProcessor;
     }
 
     @Bean

@@ -3,7 +3,9 @@ package com.jbouhssine.batch.processor;
 
 
 import org.springframework.batch.item.ItemProcessor;
+import org.springframework.stereotype.Component;
 
+@Component
 public class LineItemProcessor implements ItemProcessor<String, String> {
 
     @Override
